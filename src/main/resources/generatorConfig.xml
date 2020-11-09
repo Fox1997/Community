@@ -5,14 +5,14 @@
 
 <generatorConfiguration>
 
-    <context id="DB2Tables" targetRuntime="MyBatis3">
+    <context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat">
         <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/Community?serverTimezone=Asia/Shanghai"
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/Community?serverTimezone=GMT"
                         userId="root"
                         password="213727">
-
             <property name="useInformationSchema" value="true"/>
+            <property name="remarks" value="true"/>
         </jdbcConnection>
 
         <javaTypeResolver >
@@ -33,7 +33,8 @@
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
-        <table tableName="user" domainObjectName="User"></table>
+        <table tableName="user" domainObjectName="User"
+        enableSelectByPrimaryKey="true"></table>
         <table tableName="question" domainObjectName="Question">
         </table>
 

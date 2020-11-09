@@ -6,7 +6,7 @@
 git add .
 git commit -m "first commit"
 git branch -M main
-git remote add origin https://github.com/Fox1997/community.git
+git remote add origin https://github.com/Fox1997/Community.git
 git push -u origin main 
 
 #### 添加README 
@@ -20,3 +20,5 @@ git config --global core.autocrlf false
 git merge origin/master --allow-unrelated-histories
 https://square.github.io/okhttp/
 1111
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+

@@ -1,21 +1,22 @@
 package com.example.comm.controller;
 
+import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.example.comm.Provider.GithubProvider;
 import com.example.comm.dto.AccessTokenDto;
 import com.example.comm.dto.GithubUser;
-import com.example.comm.mapper.UserMapper;
 import com.example.comm.model.User;
 import com.example.comm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -23,8 +24,11 @@ import java.util.UUID;
 @PropertySource({"classpath:application.properties"})
 public class AuthorizeController {
 
-    @Autowired
+    @Autowired(required = false)
     private GithubProvider githubProvider;
+
+    @Autowired(required = false)
+    private UserService userService;
 
     @Value("${github.client.id}")
     private String clientId;
@@ -35,9 +39,14 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirectUri;
 
-    @Autowired(required = false)
-    private UserService userService;
 
+    @RequestMapping("/hello")
+    @ResponseBody
+    public Map<String, Object> hello() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("hello", "world");
+        return map;
+    }
 
 
     @GetMapping("/callback")
@@ -45,14 +54,24 @@ public class AuthorizeController {
                            @RequestParam(name = "state") String state,
                            HttpServletResponse response)
     {
+        System.out.printf("11111111111111111hello");
         AccessTokenDto accessTokenDto =new AccessTokenDto();
         accessTokenDto.setClient_id(clientId);
         accessTokenDto.setClient_secret(clientSecret);
         accessTokenDto.setCode(code);
         accessTokenDto.setRedirect_uri(redirectUri);
         accessTokenDto.setState(state);
+//        try {
+//            System.out.println("qqqqqqqqqqqqqqqqqqqqqqqq");
+//            String accessToken = githubProvider.getAccessToken(accessTokenDto);
+//            System.out.println(accessToken);
+//            GithubUser githubUser = githubProvider.getUser(accessToken);
+//        }catch (Exception e){
+//            System.out.println(e.getMessage());
+//        }
         String accessToken = githubProvider.getAccessToken(accessTokenDto);
         GithubUser githubUser = githubProvider.getUser(accessToken);
+        System.out.printf(accessToken);
         if (githubUser != null && githubUser.getId() != null)
         {
             User user = new User();

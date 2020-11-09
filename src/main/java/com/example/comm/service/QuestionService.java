@@ -7,6 +7,7 @@ import com.example.comm.mapper.UserMapper;
 import com.example.comm.model.Question;
 import com.example.comm.model.QuestionExample;
 import com.example.comm.model.User;
+import com.example.comm.model.UserExample;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +48,15 @@ public class QuestionService {
         {
             offset=0;
         }
-        QuestionExample example =new QuestionExample();
-        List<Question> questions = questionMapper.selectByPrimaryKeyWithRowbound(new QuestionExample(),new RowBounds(offset,size));
+        QuestionExample example3=new QuestionExample();
+
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(example3,new RowBounds(offset,size));
 
         List <QuestionDto> questionDtoList=new ArrayList<>();
         for (Question question : questions) {
-            User user =userMapper.selectByPrimaryKey(question.getCreator());
+            UserExample example =new UserExample();
+            example.createCriteria().andIdEqualTo(question.getCreator());
+            User user =userMapper.selectByExample(example).get(0);
             QuestionDto questionDto=new QuestionDto();
             BeanUtils.copyProperties(question,questionDto);
             questionDto.setUser(user);
@@ -64,7 +68,7 @@ public class QuestionService {
 
     }
 
-    public PaginationDto list(Integer userId, Integer page, Integer size) {
+    public PaginationDto list(Long userId, Integer page, Integer size) {
         PaginationDto paginationDto=new PaginationDto();
         Integer totalPage;
         QuestionExample questionExample=new QuestionExample();
@@ -88,10 +92,13 @@ public class QuestionService {
         QuestionExample example=new QuestionExample();
         questionExample.createCriteria()
                 .andCreatorEqualTo(userId);
-        List<Question> questions=questionMapper.selectByExampleWithRowbounds(example,new RowBounds(offset,size));
+        RowBounds rowBounds=new RowBounds(offset,size);
+        List<Question> questions=questionMapper.selectByExampleWithRowbounds(example,rowBounds);
         List <QuestionDto> questionDtoList=new ArrayList<>();
         for (Question question : questions) {
-            User user =userMapper.selectByPrimaryKey(question.getCreator());
+            UserExample example1=new UserExample();
+            example1.createCriteria().andIdEqualTo(question.getCreator());
+            User user = userMapper.selectByExample(example1).get(0);
             QuestionDto questionDto=new QuestionDto();
             BeanUtils.copyProperties(question,questionDto);
             questionDto.setUser(user);
@@ -104,12 +111,16 @@ public class QuestionService {
 
     }
 
-    public QuestionDto getById(Integer id) {
+    public QuestionDto getById(Long id) {
         Question question=questionMapper.selectByPrimaryKey(id);
         QuestionDto questionDto = new QuestionDto();
         BeanUtils.copyProperties(question,questionDto);
-        User user=userMapper.selectByPrimaryKey(question.getCreator());
-        questionDto.setUser(user);
+        UserExample userExample=new UserExample();
+        userExample.createCriteria().
+                andIdEqualTo(question.getCreator());
+        List<User> users=userMapper.selectByExample(userExample);
+//        User user=userMapper.selectByPrimaryKey(question.getCreator());
+        questionDto.setUser(users.get(0));
         return questionDto;
     }
 
@@ -132,4 +143,26 @@ public class QuestionService {
 
         }
     }
+    public interface BoyInjection {
+
+        void inject(Boy boy);
+    }
+    public class Classes implements BoyInjection {
+        private Boy boy;
+        @Override
+        public void inject(Boy boy) {
+            //实现接口中的方法
+            this.boy = boy;
+        }
+    }
+    public class Boy {
+        String name;
+        public Boy(String name ){
+            // 修改了构造方法
+            this.name = name;
+        }
+        public void eat(){ }
+    }
 }
+
+

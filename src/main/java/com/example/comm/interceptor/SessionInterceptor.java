@@ -2,6 +2,7 @@ package com.example.comm.interceptor;
 
 import com.example.comm.mapper.UserMapper;
 import com.example.comm.model.User;
+import com.example.comm.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
