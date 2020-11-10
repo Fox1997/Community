@@ -4,6 +4,7 @@ import com.example.comm.dto.PaginationDto;
 import com.example.comm.dto.QuestionDto;
 import com.example.comm.exception.CustomizeErrorCode;
 import com.example.comm.exception.CustomizeException;
+import com.example.comm.mapper.QuestionExtMapper;
 import com.example.comm.mapper.QuestionMapper;
 import com.example.comm.mapper.UserMapper;
 import com.example.comm.model.Question;
@@ -20,12 +21,15 @@ import java.util.List;
 
 @Service
 public class QuestionService {
+
     @Autowired(required = false)
     private QuestionMapper questionMapper;
 
     @Autowired(required = false)
-    private UserMapper userMapper;
+    private QuestionExtMapper questionExtMapper;
 
+    @Autowired(required = false)
+    private UserMapper userMapper;
 
 
     public PaginationDto list(Integer page, Integer size) {
@@ -145,12 +149,25 @@ public class QuestionService {
             QuestionExample example =new QuestionExample();
             example.createCriteria()
                     .andIdEqualTo(question.getId());
-           int uodate=questionMapper.updateByExampleSelective(updateQuestion,example);
-           if(uodate !=1){
+           int update=questionMapper.updateByExampleSelective(updateQuestion,example);
+           if(update !=1){
                throw  new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
            }
 
         }
+    }
+
+    public void incView(Long id) {
+//        Question question=questionMapper.selectByPrimaryKey(id);
+//        Question updateQuestion = new Question();
+//        updateQuestion.setReviewCount(question.getReviewCount()+1);
+//        QuestionExample example=new QuestionExample();
+//        example.createCriteria().andIdEqualTo(question.getId());
+//        questionMapper.updateByExampleSelective(updateQuestion,example);
+        Question question =new Question();
+        question.setId(id);
+        question.setReviewCount(1);
+        questionExtMapper.incView(question);
     }
 
 

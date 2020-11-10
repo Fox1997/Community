@@ -12,7 +12,7 @@ public class QuestionDto {
     private Long gmtCreate;
     private Long gmtModified;
     private Long creator;
-    private Integer viewCount;
+    private Integer reviewCount;
     private Integer commentCount;
     private Integer linkCount;
     private User user;

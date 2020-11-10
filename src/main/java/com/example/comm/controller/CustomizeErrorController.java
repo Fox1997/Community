@@ -1,9 +1,9 @@
 package com.example.comm.controller;
 
 
-import okhttp3.MediaType;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +20,7 @@ public class CustomizeErrorController implements ErrorController {
         return "error";
     }
 
-//    @RequestMapping(produces={ MediaType.TEXT_HTML_VALUE})
+   @RequestMapping(produces= MediaType.TEXT_HTML_VALUE)
     public ModelAndView errorHtml (HttpServletRequest request,
                                    Model model){
         HttpStatus status = getStatus(request);
