@@ -2,6 +2,8 @@ package com.example.comm.service;
 
 import com.example.comm.dto.PaginationDto;
 import com.example.comm.dto.QuestionDto;
+import com.example.comm.exception.CustomizeErrorCode;
+import com.example.comm.exception.CustomizeException;
 import com.example.comm.mapper.QuestionMapper;
 import com.example.comm.mapper.UserMapper;
 import com.example.comm.model.Question;
@@ -113,6 +115,10 @@ public class QuestionService {
 
     public QuestionDto getById(Long id) {
         Question question=questionMapper.selectByPrimaryKey(id);
+        if(question==null)
+        {
+            throw  new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDto questionDto = new QuestionDto();
         BeanUtils.copyProperties(question,questionDto);
         UserExample userExample=new UserExample();
@@ -139,30 +145,16 @@ public class QuestionService {
             QuestionExample example =new QuestionExample();
             example.createCriteria()
                     .andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion,example);
+           int uodate=questionMapper.updateByExampleSelective(updateQuestion,example);
+           if(uodate !=1){
+               throw  new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+           }
 
         }
     }
-    public interface BoyInjection {
 
-        void inject(Boy boy);
-    }
-    public class Classes implements BoyInjection {
-        private Boy boy;
-        @Override
-        public void inject(Boy boy) {
-            //实现接口中的方法
-            this.boy = boy;
-        }
-    }
-    public class Boy {
-        String name;
-        public Boy(String name ){
-            // 修改了构造方法
-            this.name = name;
-        }
-        public void eat(){ }
-    }
+
+
 }
 
 
