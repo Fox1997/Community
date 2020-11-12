@@ -35,7 +35,8 @@
 
         <table tableName="user" domainObjectName="User"
         enableSelectByPrimaryKey="true"></table>
-        <table tableName="question" domainObjectName="Question">
+        <table tableName="question" domainObjectName="Question"></table>
+        <table tableName="comment" domainObjectName="Comment">
         </table>
 
 

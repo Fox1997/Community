@@ -21,5 +21,6 @@ git merge origin/master --allow-unrelated-histories
 https://square.github.io/okhttp/
 
 mvn flyway:migrate
+
 mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
 

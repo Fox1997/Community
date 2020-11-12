@@ -11,6 +11,15 @@
     <title>Community</title>
     <script src="../static/js/jquery-3.4.1.min.js"></script>
 </head>
+<script type="application/javascript">
+    window.onload=function (){
+        var closeable = window.localStorage.getItem("closeable");
+        if(closeable == "true"){
+            window.close();
+            window.localStorage.removeItem("closeable");
+        }
+    }
+</script>
 <body>
 <div th:insert="~{nav :: nav}"></div>
 
